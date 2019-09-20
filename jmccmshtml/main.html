@@ -1,0 +1,98 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @@Company: DCIT-SH
+ * @Author: Sunny Chen
+ * @Date: 2019-06-05 23:07:13
+ * @LastEditors: Sunny Chen
+ * @LastEditTime: 2019-09-20 17:19:20
+ -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>佳梦财宸云平台系统</title>
+    <link rel="icon" href="img/timg.jpg">
+    <link rel="stylesheet" type="text/css" href="css/element-ui.css" />
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
+</head>
+
+<body>
+    <div id="navhead">
+        <el-container>
+            <el-header>
+                <!-- <span>{{userName}}</span> -->
+                <el-image :src="logoUrl" fit:cover style="width:8%;height:60%" alt="JMCC Logo!"></el-image>
+                <el-dropdown>
+                    <i id="drop"><span>陈永佳</span>&nbsp;<el-image :src="url" fit:cover></el-image></i>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item><i class="el-icon-user" style="margin-right: 15px" @click="selMyInfo()">
+                                个人信息</i></el-dropdown-item>
+                        <el-dropdown-item><i class="el-icon-key" style="margin-right: 15px" @click="updPass()">
+                                修改密码</i></el-dropdown-item>
+                        <el-dropdown-item><i class="el-icon-lock" style="margin-right: 15px" @click="btn()">
+                                安全退出</i></el-dropdown-item>
+                        <el-dropdown-item><i class="el-icon-copy-document" style="margin-right: 15px"
+                                @click="insertPer()">
+                                收集权限</i></el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown> 
+            </el-header>
+            <el-container>
+                <el-aside>
+                    <el-menu default-active="1" default-openeds='[1]' unique-opened=true class="el-menu-vertical-demo"
+                        @open="handleOpen" @close="handleClose" background-color="#545c64" text-color="#fff"
+                        active-text-color="#ffd04b" >
+                        <el-submenu index="1" style="width: 80%" v-for="tab in treeData" >
+                            <template slot="title" >
+                                <i class="el-icon-location"></i>
+                                <span>{{tab.label}}</span>
+                            </template>
+                            <el-menu-item-group >
+                                <el-menu-item index="1-1" v-for="(tabs,i) in tab.children"><i class="el-icon-user-solid"></i>{{tabs.label}}</el-menu-item>
+                                <!-- <el-menu-item index="1-2"><i class="el-icon-s-custom"></i>{{tabs.children.label}}</el-menu-item>
+                                <el-menu-item index="1-3"><i class="el-icon-guide"></i>{{tabs.children.label}}</el-menu-item>
+                                <el-menu-item index="1-4"><i class="el-icon-folder-opened"></i>{{tabs.children.label}}</el-menu-item>
+                                <el-menu-item index="1-5"><i class="el-icon-view"></i>{{tabs.children.label}}</el-menu-item> -->
+                            </el-menu-item-group>
+                        </el-submenu>
+                        <el-menu-item index="2">
+                            <i class="el-icon-menu"></i>
+                            <span slot="title">导航二</span>
+                        </el-menu-item>
+                        <el-menu-item index="3">
+                            <i class="el-icon-document"></i>
+                            <span slot="title">导航三</span>
+                        </el-menu-item>
+                        <el-menu-item index="4">
+                            <i class="el-icon-setting"></i>
+                            <span slot="title">导航四</span>
+                        </el-menu-item>
+                    </el-menu>
+                </el-aside>
+                <el-main>
+                    <!-- <iframe frameborder='0' scrolling='auto' style='width:100%;height:98%;'>
+            
+                                </iframe> -->
+                    <el-tabs v-model="activeName" @tab-click="handleClick">
+                        <el-tab-pane label="用户管理" name="first">用户管理</el-tab-pane>
+                        <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
+                        <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
+                        <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>
+                    </el-tabs>
+                </el-main>
+            </el-container>
+        </el-container>
+    </div>
+</body>
+<!-- 引入VUE和Element-ui组件 -->
+<script src="js/Vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/element-ui.js" type="text/javascript" charset="utf-8"></script>
+<!-- 引入公共全局变量和userInfo.js文件 -->
+<script src="js/const.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/main.js" type="text/javascript" charset="utf-8"></script>
+
+
+</html>

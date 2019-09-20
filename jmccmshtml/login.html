@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>欢迎登陆佳梦财宸云平台系统</title>
+    <link rel="icon" href="img/timg.jpg">
+    <link rel="stylesheet" type="text/css" href="css/element-ui.css" />
+    <script src="js/Vue.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/element-ui.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+        #aaa {
+            background: url(img/login.jpg);
+            background-size: 100%;
+        }
+    </style>
+</head>
+
+<body id="aaa">
+    <div id="dialog">
+        <!-- Form -->
+        <el-dialog title="佳梦财宸云平台系统" center="true" width=25% :close-on-click-modal="false"
+            :close-on-press-escape="false" :show-close="false" :visible.sync="dialogFormVisible">
+            <el-form :model="form" ref="from" :rules="rules">
+                <el-form-item label="用户名称：" prop="username">
+                    <el-input v-model="form.username" autosize="true" placeholder="请输入用户名" prefix-icon="el-icon-edit"
+                        autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="用户密码：" prop="password">
+                    <el-input type="password" v-model="form.password" autosize="true" placeholder="请输入用户密码"
+                        prefix-icon="el-icon-view	" autocomplete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="submitForm('from')">登 陆 系 统</el-button>
+                <el-button @click="resetForm('from')">清 空 输 入</el-button>
+            </div>
+        </el-dialog>
+    </div>
+</body>
+<script type="text/javascript">
+    new Vue({
+        el: '#dialog',
+        data: function () {
+            return {
+                dialogFormVisible: true,
+                form: {
+                    username: '',
+                    password: ''
+                },
+                rules: {
+                    username: [{
+                        required: true,
+                        message: '请输入用户名',
+                        trigger: 'blur'
+                    }],
+                    password: [{
+                        required: true,
+                        message: '请输入用户密码',
+                        trigger: 'blur'
+                    }]
+                }
+            }
+        },
+        mounted: function () {
+
+        },
+        methods: {
+            submitForm(from) {
+                this.$refs[from].validate((valid) => {
+                    const vm = this;
+                    if (valid) {
+                        console.log(this.$refs[from].model)
+                        const usernames = this.$refs[from].model.username;
+                        //发送Ajax请求axios.get|post(url,param).then(回调).catch(异常);
+                        axios({
+                            method: "get",
+                            url: "http://localhost:8066/jmccms/login/loginUser",
+                            params: {
+                                userName: this.$refs[from].model.username,
+                                passWord: this.$refs[from].model.password
+                            }
+                        })
+                            .then(function (res) {
+                                if (res.data.success) {
+                                    window.localStorage.setItem("loginName", usernames);
+                                    window.localStorage.setItem("userId", res.data.message.object.userId);
+                                    //window.localStorage.setItem("token", res.data.message.object.token); //将resObj的message消息中的参数存入token中
+                                    window.location.href = "http://localhost:8066/jmccms/main"; //将token暂存后跳转向main页面
+                                    /* axios({
+                                        method: "put",
+                                        url: "http://localhost:8066/jmccms/login/saveMyToken",
+                                        params: {
+                                            tokenAcc: res.data.message.object.token,
+                                            usersName: usernames
+                                        }
+                                    })
+                                        .then(function (res) {
+                                            if (res.data.success) {
+                                                window.location.href = "http://localhost:8066/jmccms/main"; //将token暂存后跳转向main页面
+                                            } else {
+                                                window.location.href = "http://localhost:8066/jmccms/main"; //将token暂存后跳转向main页面
+                                            }
+                                        })
+                                        .catch(function (error) {
+                                            $alert('请求失败出现错误', '登陆失败', {
+                                                confirmButtonText: '确定',
+                                                callback: action => {
+                                                    this.$message({
+                                                        type: 'error',
+                                                        message: '请求失败出现错误'
+                                                    });
+                                                }
+                                            });
+                                        }); */
+                                } else {
+                                    vm.$alert(res.data.message, '登陆失败', {
+                                        confirmButtonText: '确定',
+                                        callback: action => {
+                                            vm.$message({
+                                                type: 'warning',
+                                                message: res.data.message
+                                            });
+                                        }
+                                    });
+                                }
+                            })
+                            .catch(function (error) {
+                                vm.$alert(error.data.message, '登陆失败', {
+                                    confirmButtonText: '确定',
+                                    callback: action => {
+                                        vm.$message({
+                                            type: 'error',
+                                            message: error.data.message
+                                        });
+                                    }
+                                });
+                            });
+                    } else {
+                        vm.$alert('表单验证失败', '登陆失败', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                                vm.$message({
+                                    type: 'info',
+                                    message: '表单验证失败'
+                                });
+                            }
+                        });
+                        return false;
+                    }
+                });
+            },
+            resetForm(from) {
+                this.$refs[from].resetFields();
+            }
+        }
+    });
+</script>
+
+</html>

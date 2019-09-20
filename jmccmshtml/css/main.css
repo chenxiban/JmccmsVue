@@ -1,0 +1,59 @@
+html,
+body,
+#app,
+.el-container {
+    /*设置内部填充为0，几个布局元素之间没有间距*/
+    padding: 0px;
+    /*外部间距也是如此设置*/
+    margin: 0px;
+    /*统一设置高度为100%*/
+    height: 100%;
+}
+
+.el-header {
+    background-color: #000000;
+    color: #FFFFFF;
+    line-height: 80px;
+}
+
+.el-aside {
+    width:11%;
+    background-color: #545c64;
+    display: block;
+    position:absolute;
+    line-height: 600px;
+    left: 0;
+    top: 60px;
+    bottom: 0;
+    overflow-y: scroll;
+}
+
+.el-main {
+    width: 85.5%;
+    background-color: #E9EEF3;
+    color: #E6E8EA;
+    text-align: center;
+    position:absolute;
+    left: 220px;
+    top: 60px;
+    bottom: 0;
+    overflow-y: scroll;
+}
+
+.el-dropdown {
+    float: right;
+    font-size: 14px;
+}
+
+#drop span {
+    font-style: normal;
+    margin-right: 15px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+#drop .el-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+}

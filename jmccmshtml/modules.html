@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>菜单管理</title>
+    <link rel="icon" href="img/timg.jpg">
+    <link rel="stylesheet" type="text/css" href="css/element-ui.css" />
+    <style>
+        .custom-tree-node {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+            padding-right: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="modules">
+        </el-input>
+        <el-table :data="treeData" style="width: 100%;margin-bottom: 20px;" border row-key="id">
+            <el-table-column prop="id" label="模块ID">
+            </el-table-column>
+            <el-table-column prop="label" sortable label="模块名称">
+            </el-table-column>
+            <el-table-column prop="modulesRemark" :formatter="formatterRemark" label="备注">
+            </el-table-column>
+            <el-table-column prop="modulesPath" :formatter="formatterPath" label="模块路径">
+            </el-table-column>
+            <el-table-column prop="modulesWeight" sortable label="模块权重">
+            </el-table-column>
+            <el-table-column prop="modulesFounder" label="创建人">
+            </el-table-column>
+            <el-table-column prop="modulesCreateTime" sortable label="创建时间" width="180">
+            </el-table-column>
+            <el-table-column prop="modulesUpdateMan" :formatter="formatterUpdMan" label="修改人">
+            </el-table-column>
+            <el-table-column prop="modulesLastUpdateTime" :formatter="formatterUpdTime" sortable label="修改时间"
+                width="180">
+            </el-table-column>
+            <el-table-column fixed="right" label="操作" width="270">
+                <template slot-scope="scope">
+                    <el-button type="warning" size="mini" icon="el-icon-plus" round
+                        @click="setModules(scope.$index, scope.row)">添加</el-button>
+                    <el-button type="primary" size="mini" icon="el-icon-edit" round
+                        @click="updModules(scope.$index, scope.row)">修改</el-button>
+                    <el-button size="mini" type="danger" icon="el-icon-close" round
+                        @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+
+</body>
+<!-- 引入VUE和Element-ui组件 -->
+<script src="js/Vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/element-ui.js" type="text/javascript" charset="utf-8"></script>
+<!-- 引入公共全局变量和modules.js文件 -->
+<script src="js/const.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/sys/modules.js" type="text/javascript" charset="utf-8"></script>
+
+</html>

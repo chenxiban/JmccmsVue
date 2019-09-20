@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>用户管理</title>
+    <link rel="icon" href="img/timg.jpg">
+    <link rel="stylesheet" type="text/css" href="css/element-ui.css" />
+    <style type="text/css">
+        .demo-table-expand {
+            font-size: 0;
+        }
+
+        .demo-table-expand label {
+            width: 90px;
+            color: #99a9bf;
+        }
+
+        .demo-table-expand .el-form-item {
+            margin-right: 0;
+            margin-bottom: 0;
+            width: 50%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="userInfo">
+        <el-form ref="formSearch" :model="formSearch" label-width="80px">
+            <el-row>
+                <el-col :span="4">
+                    <el-form-item label="用户名称: " prop="searchUserName">
+                        <el-input size="small" placeholder="请输入用户名称" suffix-icon="el-icon-edit"
+                            v-model="formSearch.searchUserName">
+                        </el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                    <el-form-item label="用户电话: " prop="searchUserPhone">
+                        <el-input size="small" placeholder="请输入用户手机号" suffix-icon="el-icon-phone-outline"
+                            v-model="formSearch.searchUserPhone">
+                        </el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                    <el-form-item label="用户邮箱: " prop="searchUserEmail">
+                        <el-input size="small" placeholder="请输入用户邮箱" suffix-icon="el-icon-message"
+                            v-model="formSearch.searchUserEmail">
+                        </el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                    <el-form-item label="用户地址: " prop="searchUserAddress">
+                        <el-input size="small" placeholder="请输入用户地址" suffix-icon="el-icon-message"
+                            v-model="formSearch.searchUserAddress">
+                        </el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="3">
+                    <el-form-item label="用户性别: " prop="searchUserSex">
+                        <el-select size="small" v-model="formSearch.searchUserSex">
+                            <el-option label="选择性别" value=""></el-option>
+                            <el-option label="男" value="0"></el-option>
+                            <el-option label="女" value="1"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="3">
+                    <el-form-item label="用户状态: " prop="searchUserStatus">
+
+                        <el-select size="small" v-model="formSearch.searchUserStatus" placeholder="选择状态">
+                            <el-option label="选择状态" value=""></el-option>
+                            <el-option label="已锁定" value="是"></el-option>
+                            <el-option label="未锁定" value="否"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="创建时间: " prop="searchUserCreateTime">
+                        <el-date-picker size="small" v-model="formSearch.searchUserCreateTime" type="datetimerange"
+                            format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="pickerOptions"
+                            range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+                        </el-date-picker>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="检索条件: ">
+                        <el-button type="primary" size="small" icon="el-icon-search"
+                            @click="onSubmitFormSearch('formSearch')">检索</el-button>
+                        <el-button type="danger" size="small" icon="el-icon-refresh"
+                            @click="resetFormSearch('formSearch')">重置</el-button>
+                        <el-button type="warning" size="small" icon="el-icon-plus" @click="addOrg()">添加用户</el-button>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+        </el-form>
+
+        <el-table
+            :data="tableData.filter(data => !search || data.userInfoName.toLowerCase().includes(search.toLowerCase()))"
+            stripe border style="width: 100%;height: auto;color: #409EFF;" max-height="600">
+            <el-table-column type="selection" width="55">
+            </el-table-column>
+            <el-table-column type="expand" fixed prop="userInfoId">
+                <template slot-scope="props">
+                    <el-form label-position="left" inline class="demo-table-expand">
+                        <el-form-item label="用户ID">
+                            <span>{{ props.row.userInfoId }}</span>
+                        </el-form-item>
+                        <el-form-item label="是否锁定">
+                            <span>{{ props.row.userInfoIsLookout }}</span>
+                        </el-form-item>
+                        <el-form-item label="用户生日">
+                            <span>{{ props.row.userInfoBirthday }}</span>
+                        </el-form-item>
+                        <el-form-item label="用户邮箱">
+                            <span>{{ props.row.userInfoEmail }}</span>
+                        </el-form-item>
+                        <el-form-item label="用户地址">
+                            <span
+                                v-if="props.row.userInfoAddress == '' || props.row.userInfoAddress == null">暂无数据</span>
+                            <span>{{ props.row.userInfoAddress }}</span>
+                        </el-form-item>
+                        <el-form-item label="创建时间">
+                            <span>{{ props.row.userInfoCreateTime }}</span>
+                        </el-form-item>
+                        <el-form-item label="创建人">
+                            <span>{{ props.row.userInfoFounder }}</span>
+                        </el-form-item>
+                        <el-form-item label="修改人">
+                            <span
+                                v-if="props.row.userInfoUpdateMan == '' || props.row.userInfoUpdateMan == null">暂无数据</span>
+                            <span v-else>{{ props.row.userInfoUpdateMan }}</span>
+                        </el-form-item>
+                        <el-form-item label="用户简介">
+                            <span v-if="props.row.userInfoRemark == '' || props.row.userInfoRemark == null">暂无数据</span>
+                            <span>{{ props.row.userInfoRemark }}</span>
+                        </el-form-item>
+                    </el-form>
+                </template>
+            </el-table-column>
+            <el-table-column fixed prop="userInfoName" label="用户信息">
+                <template slot-scope="scope">
+
+                    <el-popover trigger="hover" placement="top">
+                        <p>用户名称: {{ scope.row.userInfoName }}</p>
+                        <p>用户生日: {{ scope.row.userInfoBirthday }}</p>
+                        <p>联系方式: {{ scope.row.userInfoPhone }}</p>
+                        <p v-if="scope.row.userInfoAddress == '' || scope.row.userInfoAddress == null">用户简介:
+                            暂无数据</p>
+                        <p v-else>用户地址: {{ scope.row.userInfoAddress }}</p>
+                        <p v-if="scope.row.userInfoRemark == '' || scope.row.userInfoRemark == null">用户简介:
+                            暂无数据</p>
+                        <p v-else>用户简介: {{ scope.row.userInfoRemark }}</p>
+                        <div slot="reference" class="name-wrapper">
+                            <el-tag size="medium">{{ scope.row.userInfoName }}</el-tag>
+                        </div>
+                    </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column fixed prop="userInfoAge" label="用户年龄">
+            </el-table-column>
+            <el-table-column fixed prop="userInfoSex" :formatter="formatterSex" label="用户性别">
+            </el-table-column>
+            <el-table-column fixed prop="userInfoPhone" label="联系方式">
+            </el-table-column>
+            <el-table-column fixed="left" label="操作">
+                <template slot="header" slot-scope="scope">
+                    <el-row>
+                        <el-input v-model="search" size="mini"  placeholder="用户名称关键字(当前页)" />
+                    </el-row>
+                </template>
+                <template slot-scope="scope">
+                    <el-button type="warning" size="mini" icon="el-icon-plus" round
+                        @click="setRole(scope.$index, scope.row)">设置</el-button>
+                    <el-button type="primary" size="mini" icon="el-icon-edit" round
+                        @click="updOrg(scope.$index, scope.row)">修改</el-button>
+                    <el-button size="mini" type="danger" icon="el-icon-close" round
+                        @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <div id="page">
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                :current-page="currentPage" :page-size="pagesize" :page-sizes="[5, 10, 20, 50]" background
+                layout="total, sizes, prev, pager, next, jumper" :total="total">
+            </el-pagination>
+        </div>
+        <!-- Form -->
+        <el-dialog title="添加用户信息" width=40% top="10vh" :close-on-click-modal="false" :close-on-press-escape="false"
+            :visible.sync="dialogFormVisible" @close='closeAddDialog'>
+            <el-form :model="from" ref="from" :rules="rules" label-width="120px" size="small">
+                <el-form-item label="用户名称" prop="userInfoName">
+                    <el-input v-model="from.userInfoName" placeholder="请输入用户名称" prefix-icon="el-icon-edit"></el-input>
+                </el-form-item>
+                <el-form-item label="用户性别" prop="userInfoSex">
+                    <el-select v-model="from.userInfoSex" placeholder="请选择">
+                        <el-option label="男" value="0"></el-option>
+                        <el-option label="女" value="1"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="用户生日" prop="userInfoBirthday">
+                    <el-date-picker v-model="from.userInfoBirthday" type="datetime" format="yyyy-MM-dd HH:mm"
+                        value-format="yyyy-MM-dd HH:mm" placeholder="选择日期时间">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="用户邮箱" prop="userInfoEmail">
+                    <el-input v-model="from.userInfoEmail" placeholder="请输入用户邮箱" prefix-icon="el-icon-edit-outline">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="联系电话" prop="userInfoPhone">
+                    <el-input minlength=11 maxlength=11 v-model.number="from.userInfoPhone" placeholder="请输入用户联系电话"
+                        prefix-icon="el-icon-phone-outline"></el-input>
+                </el-form-item>
+                <el-form-item label="用户地址" prop="userInfoAddress">
+                    <el-input type="textarea" v-model="from.userInfoAddress"></el-input>
+                </el-form-item>
+                <el-form-item label="用户简介" prop="userInfoRemark">
+                    <el-input type="textarea" v-model="from.userInfoRemark">
+                    </el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button size="small" type="primary" @click="onSubmit('from')">立 即 添 加</el-button>
+                    <el-button size="small" @click="resetForm('from')">清 空 输 入</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
+
+        <!-- Forms -->
+        <el-dialog title="修改机构信息" width=40% top="10vh" :close-on-click-modal="false" :close-on-press-escape="false"
+            :visible.sync="dialogFormUpd" @close='closeUpdDialog'>
+            <el-form :model="froms" ref="froms" :rules="rulesU" label-width="120px" size="small">
+                <el-form-item label="用户ID" prop="userInfoId" hidden=true>
+                    <el-input v-model="froms.userInfoId" disabled="true" placeholder="请输入用户Id"
+                        prefix-icon="el-icon-edit"></el-input>
+                </el-form-item>
+                <el-form-item label="用户名称" prop="userInfoName">
+                    <el-input v-model="froms.userInfoName" placeholder="请输入用户名称" prefix-icon="el-icon-edit">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="用户性别" prop="userInfoSex">
+                    <el-select v-model="froms.userInfoSex" placeholder="请选择">
+                        <el-option label="男" value="0"></el-option>
+                        <el-option label="女" value="1"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="用户生日" prop="userInfoBirthday">
+                    <el-date-picker v-model="froms.userInfoBirthday" type="datetime" format="yyyy-MM-dd HH:mm"
+                        value-format="yyyy-MM-dd HH:mm" placeholder="选择日期时间">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="用户邮箱" prop="userInfoEmail">
+                    <el-input v-model="froms.userInfoEmail" placeholder="请输入用户邮箱" prefix-icon="el-icon-edit-outline">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="联系电话" prop="userInfoPhone">
+                    <el-input minlength=11 maxlength=11 v-model.number="froms.userInfoPhone" placeholder="请输入用户联系电话"
+                        prefix-icon="el-icon-phone-outline"></el-input>
+                </el-form-item>
+                <el-form-item label="用户地址" prop="userInfoAddress">
+                    <el-input type="textarea" v-model="froms.userInfoAddress"></el-input>
+                </el-form-item>
+                <el-form-item label="用户简介" prop="userInfoRemark">
+                    <el-input type="textarea" v-model="froms.userInfoRemark">
+                    </el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button size="small" type="primary" @click="onSubmitUpd('froms')">立 即 修 改</el-button>
+                    <el-button @click="resetForms('froms')">清 空 输 入</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
+
+        <!-- FormRole -->
+        <el-dialog title="设置角色信息" :close-on-click-modal="false" :close-on-press-escape="false"
+            :visible.sync="dialogFormSetRoleVisible">
+            <div style="text-align: center">
+                <el-transfer style="text-align: left; display: inline-block" v-model="rightC" filterable
+                    :titles="['未设置的角色', '已设置的角色']" :button-texts="['移除角色', '添加角色']" :format="{
+                                noChecked: '${total}',
+                                hasChecked: '${checked}/${total}'
+                              }" @change="handleChange" :data="dataSetRole">
+                </el-transfer>
+            </div>
+        </el-dialog>
+    </div>
+
+</body>
+<!-- 引入VUE和Element-ui组件 -->
+<script src="js/Vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/element-ui.js" type="text/javascript" charset="utf-8"></script>
+<!-- 引入公共全局变量和userInfo.js文件 -->
+<script src="js/const.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/sys/userInfo.js" type="text/javascript" charset="utf-8"></script>
+
+</html>
